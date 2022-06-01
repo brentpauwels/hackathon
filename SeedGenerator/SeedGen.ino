@@ -46,14 +46,14 @@ void codeCheck() {
   Serial.print("Samenstelling: ");
   Serial.print(lDigit);
   int count = 0;
-  for (int y = moeilijkheid + 2; y >= 0; y--) {
-    codeArr[count] = (lastDigit(sDigit / pow(10, y)));
-    codeArr[count+moeilijkheid+2] = (lastDigit(lDigit / pow(10, y)));
+  for (int y = moeilijkheid + 2; y > 0; y--) {
+    codeArr[count] = (lastDigit(sDigit / pow(10, y-1)));
+    codeArr[count+moeilijkheid+2] = (lastDigit(lDigit / pow(10, y-1)));
     count++;
   }
-
-//  for (int n: codeArr) {
-//  Serial.print(n);
-//  }
-//  Serial.println("");
+  Serial.println("");
+  for (int y = 0; y <= moeilijkheid+1; y++) {
+        Serial.print(codeArr[y]);
+  }
+  Serial.println("");
 }
