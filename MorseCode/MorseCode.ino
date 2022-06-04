@@ -1,14 +1,15 @@
 #include <Wire.h>
 
-String inputStr="ABC"; 
+String inputStr=""; 
 int dotT = 300, dashT=900, pauseT=1500; //Wachttijd van puntje, streepje en pauze tussen karakters
 const int arduinoID = 10;         // MOET UNIQUE ZIJN T.O.V ANDERE ARDUINOS !!!
 int code = -1;
 int solved = 1;  // 1 == solved, 0 != solved
-const int dotPin=2; 
+const int dotPin=2;
+String cijfers[10] = {"NUL", "EEN", "TWEE", "DRIE", "VIER", "VIJF", "ZES", "ZEVEN", "ACHT", "NEGEN"};
 
 void setup() {
-  Wire.begin(arduinoID);                // join i2c bus with address #8
+  Wire.begin(arduinoID);         // join i2c bus with address #8
   Wire.onReceive(receiveEvent); // register event
   Wire.onRequest(puzzleSolved);
   Serial.begin(115200);  
@@ -40,7 +41,8 @@ void receiveEvent(int howMany) {
     Serial.print(c);         // print the character
   }
   code = Wire.read();    // receive byte as an integer
-  Serial.println(code);         // print the integer
+  Serial.println(code);  // print the integer
+  inputStr = cijfers[code];
  
 }
 
