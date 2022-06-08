@@ -56,10 +56,6 @@ void loop() {
       }
     }
   }
-  delay(1000);
-  if (solved == 1) {
-    solved = 0;
-  }
 }
 
 void Print(char Char) {  // function for printing char

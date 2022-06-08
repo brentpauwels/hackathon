@@ -162,11 +162,7 @@ void setup() {
 }
 
 void loop() {
-  if (code >= 0) { // do, als code ontvangen is (dus boven 0 ligt)
-    if (solved == 1) {
-      solved = 0;
-    }
-
+  if (code >= 0) { // execute puzzle when program has gotten its code
     xValue = analogRead(X_PIN); //get initial xValue
     yValue = analogRead(Y_PIN); //get intial yValue
     if (yValue > 521) { //joystick is pointing down
@@ -218,7 +214,6 @@ void loop() {
         }
       }
     }
-    delay(1000);
   }
 }
 
