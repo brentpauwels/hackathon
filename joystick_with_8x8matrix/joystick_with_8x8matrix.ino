@@ -5,8 +5,8 @@
 
 const int arduinoID = 11;         // MOET UNIQUE ZIJN T.O.V ANDERE ARDUINOS !!!
 int code = -1;
-int solved = 1;                  // 1 == solved, 0 != solved
-int Digit[8][8];
+int solved = 1;                  // 1 == solved, false != solved
+bool Digit[8][8];
 LedControl lc = LedControl(12, 11, 10, 1); //12 = DataIn, 11 = CLK, 10 = LOAD
 
 #define X_PIN  A0 // joystick X_PIN analog pin
@@ -86,151 +86,150 @@ void receiveEvent(int howMany) {
   }
   code = Wire.read();    // receive byte as an integer
   Serial.println(code);         // print the integer
-switch (code) {
-default:
-  Digit[8][8] = {
-    {0, 1, 1, 0, 0, 1, 1, 0},
-    {1, 1, 1, 1, 1, 1, 1, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1},
-    {0, 1, 1, 1, 1, 1, 1, 0},
-    {0, 0, 1, 1, 1, 1, 0, 0},
-    {0, 0, 0, 1, 1, 0, 0, 0}
-  };
-  break;
+  switch (code) {
+    default: //heart
+      Digit[8][8] = { 
+        {false, true, true, false, false, true, true, false},
+        {true, true, true, true, true, true, true, true},
+        {true, true, true, true, true, true, true, true},
+        {true, true, true, true, true, true, true, true},
+        {true, true, true, true, true, true, true, true},
+        {false, true, true, true, true, true, true, false},
+        {false, false, true, true, true, true, false, false},
+        {false, false, false, true, true, false, false, false}
+      };
+      break;
 
-case 1:
-  Digit[8][8] = {
-    {0, 0, 0, 1, 0, 0, 0, 0},
-    {0, 0, 1, 1, 0, 0, 0, 0},
-    {0, 0, 0, 1, 0, 0, 0, 0},
-    {0, 0, 0, 1, 0, 0, 0, 0},
-    {0, 0, 0, 1, 0, 0, 0, 0},
-    {0, 0, 0, 1, 0, 0, 0, 0},
-    {0, 0, 0, 1, 0, 0, 0, 0},
-    {0, 0, 1, 1, 1, 0, 0, 0}
-  };
-  break;
+    case 1:
+      Digit[8][8] = { 
+        {false, false, false, true, false, false, false, false},
+        {false, false, true, true, false, false, false, false},
+        {false, false, false, true, false, false, false, false},
+        {false, false, false, true, false, false, false, false},
+        {false, false, false, true, false, false, false, false},
+        {false, false, false, true, false, false, false, false},
+        {false, false, false, true, false, false, false, false},
+        {false, false, true, true, true, false, false, false}
+      };
+      break;
 
-case 2:
-  Digit[8][8] = {
-    {0, 0, 1, 1, 1, 0, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 0, 0, 0, 0, 1, 0, 0},
-    {0, 0, 0, 0, 0, 1, 0, 0},
-    {0, 0, 0, 0, 1, 0, 0, 0},
-    {0, 0, 0, 1, 0, 0, 0, 0},
-    {0, 0, 1, 0, 0, 0, 0, 0},
-    {0, 1, 1, 1, 1, 1, 0, 0}
-  };
-  break;
+    case 2: 
+      Digit[8][8] = {
+        {false, false, true, true, true, false, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, false, false, false, false, true, false, false},
+        {false, false, false, false, false, true, false, false},
+        {false, false, false, false, true, false, false, false},
+        {false, false, false, true, false, false, false, false},
+        {false, false, true, false, false, false, false, false},
+        {false, true, true, true, true, true, false, false}
+      };
+      break;
 
-case 3:
-  Digit[8][8] = {
-    {0, 0, 1, 1, 1, 0, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 0, 0, 0, 0, 1, 0, 0},
-    {0, 0, 0, 1, 1, 0, 0, 0},
-    {0, 0, 0, 0, 0, 1, 0, 0},
-    {0, 0, 0, 0, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 0, 1, 1, 1, 0, 0, 0}
-  };
-  break;
+    case 3:
+      Digit[8][8] = {
+        {false, false, true, true, true, false, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, false, false, false, false, true, false, false},
+        {false, false, false, true, true, false, false, false},
+        {false, false, false, false, false, true, false, false},
+        {false, false, false, false, false, true, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, false, true, true, true, false, false, false}
+      };
+      break;
 
-case 4:
-  Digit[8][8] =  {
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 1, 1, 0, 0},
-    {0, 0, 0, 1, 0, 1, 0, 0},
-    {0, 0, 1, 0, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 1, 1, 1, 1, 1, 0, 0},
-    {0, 0, 0, 0, 0, 1, 0, 0},
-    {0, 0, 0, 0, 0, 1, 0, 0}
-  };
-  break;
+    case 4:
+      Digit[8][8] =  {
+        {false, false, false, false, false, false, false, false},
+        {false, false, false, false, true, true, false, false},
+        {false, false, false, true, false, true, false, false},
+        {false, false, true, false, false, true, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, true, true, true, true, true, false, false},
+        {false, false, false, false, false, true, false, false},
+        {false, false, false, false, false, true, false, false}
+      };
+      break;
 
-case 5:
-  Digit[8][8] = {
-    {0, 1, 1, 1, 1, 1, 0, 0},
-    {0, 1, 0, 0, 0, 0, 0, 0},
-    {0, 1, 0, 0, 0, 0, 0, 0},
-    {0, 1, 1, 1, 1, 0, 0, 0},
-    {0, 0, 0, 0, 0, 1, 0, 0},
-    {0, 0, 0, 0, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 0, 1, 1, 1, 0, 0, 0}
-  };
-  break;
+    case 5:
+      Digit[8][8] = {
+        {false, true, true, true, true, true, false, false},
+        {false, true, false, false, false, false, false, false},
+        {false, true, false, false, false, false, false, false},
+        {false, true, true, true, true, false, false, false},
+        {false, false, false, false, false, true, false, false},
+        {false, false, false, false, false, true, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, false, true, true, true, false, false, false}
+      };
+      break;
 
-case 6:
-  Digit[8][8] = {
-    {0, 0, 1, 1, 1, 0, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0, 0, 0, 0},
-    {0, 1, 1, 1, 1, 0, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 0, 1, 1, 1, 0, 0, 0}
-  };
-  break;
+    case 6:
+      Digit[8][8] = {
+        {false, false, true, true, true, false, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, true, false, false, false, false, false, false},
+        {false, true, true, true, true, false, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, false, true, true, true, false, false, false}
+      };
+      break;
 
-case 7:
-  Digit[8][8] = {
-    {0, 1, 1, 1, 1, 1, 0, 0},
-    {0, 0, 0, 0, 0, 1, 0, 0},
-    {0, 0, 0, 0, 0, 1, 0, 0},
-    {0, 0, 0, 0, 1, 0, 0, 0},
-    {0, 0, 0, 1, 0, 0, 0, 0},
-    {0, 0, 1, 0, 0, 0, 0, 0},
-    {0, 0, 1, 0, 0, 0, 0, 0},
-    {0, 0, 1, 0, 0, 0, 0, 0}
-  };
-  break;
+    case 7:
+      Digit[8][8] = {
+        {false, true, true, true, true, true, false, false},
+        {false, false, false, false, false, true, false, false},
+        {false, false, false, false, false, true, false, false},
+        {false, false, false, false, true, false, false, false},
+        {false, false, false, true, false, false, false, false},
+        {false, false, true, false, false, false, false, false},
+        {false, false, true, false, false, false, false, false},
+        {false, false, true, false, false, false, false, false}
+      };
+      break;
 
-case 8:
-  Digit[8][8] = {
-    {0, 0, 1, 1, 1, 0, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 0, 1, 1, 1, 0, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 0, 1, 1, 1, 0, 0, 0}
-  };
-  break;
+    case 8:
+      Digit[8][8] = {
+        {false, false, true, true, true, false, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, false, true, true, true, false, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, false, true, true, true, false, false, false}
+      };
+      break;
 
-case 9:
-  Digit[8][8] = {
-    {0, 0, 1, 1, 1, 0, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 0, 1, 1, 1, 1, 0, 0},
-    {0, 0, 0, 0, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 0, 1, 1, 1, 0, 0, 0}
-  };
-  break;
+    case 9:
+      Digit[8][8] = {
+        {false, false, true, true, true, false, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, false, true, true, true, true, false, false},
+        {false, false, false, false, false, true, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, false, true, true, true, false, false, false}
+      };
+      break;
 
-case 0:
-  Digit[8][8] = {
-    {0, 0, 1, 1, 1, 0, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 1, 0, 0, 0, 1, 0, 0},
-    {0, 0, 1, 1, 1, 0, 0, 0}
-  };
-  break;
-
-}
+    case 0:
+      Digit[8][8] = {
+        {false, false, true, true, true, false, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, true, false, false, false, true, false, false},
+        {false, false, true, true, true, false, false, false}
+      };
+      break;
+  }
 }
 
 void puzzleSolved() {
