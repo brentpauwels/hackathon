@@ -1,11 +1,13 @@
 #include <Wire.h>
+#include <Servo.h>
 
 const int arduinoID = 12;         // MOET UNIQUE ZIJN T.O.V ANDERE ARDUINOS !!!
 int code = -1;
 int solved = 1;                  // 1 == solved, 0 != solved
 
-
+Servo servo_9;
 int analogPin = A0;
+double graden;
 bool opgelost = false;
 bool goedeTemp = false;
 unsigned long startOven = 0;
@@ -15,6 +17,7 @@ void setup() {
   Wire.onReceive(receiveEvent); // register event
   Wire.onRequest(puzzleSolved);
   pinMode(analogPin, OUTPUT);
+  servo_9.attach(9, 500, 2500);
   pinMode(13, OUTPUT);
   pinMode(8, OUTPUT);
   Serial.begin(9600);
@@ -26,9 +29,11 @@ void loop() {
   // put your main code here, to run repeatedly:
   if (code >= 0) {
       int val = analogRead(analogPin);
-      //delay(250); 
-        Serial.println(val);
-        Serial.println(startOven);
+      graden = val/5.7;
+    servo_9.write(ceil(graden));
+    Serial.println(val);
+    Serial.println(ceil(graden));
+      //delay(250);
         if(val <= 1024 && val >= 650){
           goedeTemp = true;
           Serial.println("goede temp");
