@@ -46,6 +46,7 @@ void loop() {
         }
     if(startOven !=0 && millis() >= startOven+6000){
             opgelost = true;
+            solved = 1;
             Serial.println("vuur is langgenoeg warm");
             digitalWrite(8, HIGH);
     }
