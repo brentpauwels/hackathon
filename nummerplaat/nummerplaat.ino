@@ -1,78 +1,67 @@
-//source 7segment code: https://create.arduino.cc/projecthub/aboda243/get-started-with-seven-segment-c73200
 #include <Wire.h>
+#include <SevenSegmentDisplay.h>
+//source 7segment code: https://github.com/alikabeel/Letters-and-Numbers-Seven-Segment-Display-Library
+/*
+  Showing numbers, chars and phrases
+                            A (segment 7, arduino pin 12)
+                           ---
+  F (seg[5] in this project) |   | B (segment 6, arduino pin 11)
+                          |   |
+                           --- G (segment 10, arduino pin 6)
+  E (seg[4] in this project) |   |
+                          |   | C (segment 4, arduino pin10)
+                           ---  . (segment 5, arduino pin 5 )
+                            D (segment 2, arduino pin9)
+*/
 const int arduinoID = 10;         // MOET UNIQUE ZIJN T.O.V ANDERE ARDUINOS !!!
 int code = -1;
-int solved = 1;                  // 1 == solved, 0 != solved
-char c = -1;
-
-byte Digits[10][8] {
-  {'0', 1, 1, 1, 1, 1, 1, 0}, //0
-  {'1', 0, 1, 1, 0, 0, 0, 0}, //1
-  {'2', 1, 1, 0, 1, 1, 0, 1}, //2
-  {'3', 1, 1, 1, 1, 0, 0, 1}, //3
-  {'4', 0, 1, 1, 0, 0, 1, 1}, //4
-  {'5', 1, 0, 1, 1, 0, 1, 1}, //5
-  {'6', 1, 0, 1, 1, 1, 1, 1}, //6
-  {'7', 1, 1, 1, 0, 0, 0, 0}, //7
-  {'8', 1, 1, 1, 1, 1, 1, 1}, //8
-  {'9', 1, 1, 1, 1, 0, 1, 1}, //9
-};
-
-#define A 12
-#define B 11
-#define C 10
-#define D 9
-#define E 8
-#define F 7
-#define G 6
-int seg[] {A, B, C, D, E, F, G};        //note: no use for Decimal Point, so it's omitted
-const int Q = 13;
-int sensorState = 1;                    //sensor starts 1
+int solved = 0;
+char c = '0';
+SevenSegmentDisplay digit(12, 11, 10, 9, 8, 7, 6, 5, false);  //initialization 7seg display according to library prescriptions
+const int Q = 2;
+int sensorState = 0;                    //sensor starts 0
 void setup() {
   Wire.begin(arduinoID);                // join i2c bus with address #10
   Wire.onReceive(receiveEvent);         // register event
   Wire.onRequest(puzzleSolved);
   Serial.begin(115200);                 // start serial for output
-
-  pinMode(seg[0], OUTPUT);              //all pins of the 7 segment are outputs
-  pinMode(seg[1], OUTPUT);
-  pinMode(seg[2], OUTPUT);
-  pinMode(seg[3], OUTPUT);
-  pinMode(seg[4], OUTPUT);
-  pinMode(seg[5], OUTPUT);
-  pinMode(seg[6], OUTPUT);
-  pinMode(Q, INPUT);                 //button as input
+  pinMode(Q, INPUT); //button as input
+  digit.displayDecimalPoint(false); // DP is not needed for this usecase
+  code = 5;
 }
 
 void loop() {
-
+  c = code + '0';
+  sensorState = digitalRead(Q); //debug
+  Serial.println(sensorState); //debug
   if (code >= 0) { // do, als code ontvangen is (dus boven 0 ligt)
-    digitalRead(sensorState);
-    if (digitalRead(sensorState) == LOW) {                                 //sensor has read a magnet
-      unsigned long magnet_read = millis();                             //unsigned because always >= 0
-      if (millis() == magnet_read + 1000 && digitalRead(Q) == LOW) { //make sure the sensor sees the magnet for at least 1 whole second before showing answer
-        Print(c);
+    digitalRead(Q);
+    if (sensorState == HIGH) {                                //sensor has read the magnet
+      //unsigned long magnet_read = millis();                             //unsigned because always >= 0
+      Serial.println(sensorState);
+      delay(2000);
+      if (sensorState == HIGH) { //make sure the sensor sees the magnet for at least 2 whole seconds before showing answer
+        digit.displayCharacter(c);
+        Serial.println(c);
         solved = 1;
+      }
+    }
+    else {//sensor reads 0
+      for (int i = 0; i < 10; i++) { //show digits 0 through 10
+        sensorState = digitalRead(Q);
+        if (sensorState == HIGH) {
+          break;
+        }
+        digit.displayCharacter(i + '0');
+        delay(200);
       }
     }
   }
 }
 
-void Print(char Char) {  // function for printing char
-  int index = -1;     // set search result to -1
-  for (int i = 0; i < 10 ; i++) { //search for the entered character
-    if (Char == Digits[i][0]) { //if the character found
-      index = i;//set the result number into index
-    }
-  }
-  for (int i = 0; i < 8; i++) {
-    digitalWrite(seg[i], Digits[index][i + 1]);
-  }
-}
-
 void receiveEvent(int howMany) {
   while (1 < Wire.available()) {  // loop through all but the last
-    char c = Wire.read();         // receive byte as a character
+    c = Wire.read();         // receive byte as a character
     Serial.print(c);              // print the character
   }
 
