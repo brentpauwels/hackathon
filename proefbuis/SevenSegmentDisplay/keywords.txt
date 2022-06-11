@@ -1,4 +1,0 @@
-SevenSegmentDisplay	KEYWORD1
-displayCharacter	KEYWORD2
-displayDecimalPoint	KEYWORD2
-testDisplay	KEYWORD2
