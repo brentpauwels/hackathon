@@ -15,8 +15,7 @@
 */
 const int arduinoID = 10;         // MOET UNIQUE ZIJN T.O.V ANDERE ARDUINOS !!!
 int code = -1;
-int solved = 0;
-char c = '0';
+int solved = 1;
 SevenSegmentDisplay digit(12, 11, 10, 9, 8, 7, 6, 5, false);  //initialization 7seg display according to library prescriptions
 const int dotPin = 2;
 const int button = 3;
@@ -41,34 +40,33 @@ void setup() {
   pinMode(hallPin, INPUT); // sensor leg as input
   starting_time = millis();
   pinMode(dotPin, OUTPUT);
-  digitalWrite(dotPin, HIGH); // start serial for output
 
 }
 
 void loop() {
   if (code >= 0) { // only execute when master Arduino gave code
-    sensorState = digitalRead(button);
+    Serial.println( digitalRead(hallPin));
+    Serial.println(inputStr);
     int len = inputStr.length();
-    unsigned long current_time = millis();
-    if ( current_time - starting_time >= interval_time) {
+    if ( millis() - starting_time >= interval_time) {
+
       for (int i = 0; i <= (len - 1); i++) { //converts every char to Morse equivalent
         char dispChar = inputStr.charAt(i);
         convertToMorse(dispChar);
       }
-      starting_time = current_time;
+      starting_time = millis();
     }
-    if (buttonState && sensorState ) { //both games finished
-      Serial.println(buttonState + " " + sensorState ); //debug
+    if (buttonState == HIGH && sensorState == HIGH) { //both games finished
       delay(2000);
-      if (buttonState && sensorState) { //make sure both games are finished for at least 2 whole seconds before showing answer
+      if (buttonState == HIGH && sensorState == HIGH) { //make sure both games are finished for at least 2 whole seconds before showing answer
         for (int i = 0; i < 7; i++) {
           digit.displayCharacter(thanks[i]);
           delay(300);
         }
-        solved = 1;
+        solved = 0;
       }
     }
-    else if (buttonState && ! sensorState || ! buttonState && sensorState) { //1 game finished
+    if (buttonState == HIGH && sensorState != HIGH || buttonState != HIGH && sensorState == HIGH) { //1 game finished
       for (int i = 0; i < 7; i++) { //show "almost"
         buttonState = digitalRead(button);
         sensorState = digitalRead(hallPin);
@@ -80,7 +78,7 @@ void loop() {
       }
       delay(500);
     }
-    else { //both games aren't finished yet
+    if ( buttonState != HIGH && sensorState != HIGH) {//both games aren't finished yet
       for (int i = 0; i < 5; i++) { //show "help"
         buttonState = digitalRead(button);
         sensorState = digitalRead(hallPin);
@@ -124,7 +122,7 @@ void receiveEvent(int howMany) {
 
   code = Wire.read();            // receive byte as an integer
   Serial.println(code);         // print the integer
-
+  inputStr = cijfers[code];
 }
 
 void puzzleSolved() {
